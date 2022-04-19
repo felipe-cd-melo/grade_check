@@ -5,22 +5,29 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
         String[] studentData = new String[2];
         Double[] score = new Double[5];
-        Double[] scoreLimits = new Double[5];
-        scoreLimits = {10,10,10,50,20};
-        Double scoreFinal = 0D;
-        boolean dataCheck;
-        
+        Double[] scoreLimits = new Double[]{10D,10D,10D,50D,20D};
+        Double finalScore;
+        Double maxScore = 0D;
 
-        getStudentData(studentData, scanner);
-        System.out.println(studentData[0]);
-        System.out.println(studentData[1]);
+        for(int i = 0;i<score.length;i++){
+            maxScore += scoreLimits[i];
+        }
+
+        getStudentData(studentData);
+        finalScore = getScores(score, scoreLimits);
+        if(getResult(finalScore, maxScore, studentData[1])==true){
+            System.out.println("the student "+studentData[0]+" was APPROVED. Total score: "+finalScore);
+        }else{
+            System.out.println("the student "+studentData[0]+" was REPROVED. Total score: "+finalScore);
+        }
     }
 
     //get student data
-    public static void getStudentData(String[] studentData, Scanner scanner) {
+    public static void getStudentData(String[] studentData) {
+        Scanner scanner = new Scanner(System.in);
+
         System.out.print("Student Name: ");
         studentData[0] = String.valueOf(scanner.nextLine());
         System.out.print("School Type: ");
@@ -28,23 +35,55 @@ public class Main {
     }
 
     //get scores
-    public static double setScores(Scanner scanner,Double[] score, Double[] scoreLimits,Double scoreFinal, boolean dataCheck){
+    public static double getScores(Double[] score, Double[] scoreLimits){
+        Double finalScore = 0D;
+        Double scoreValue = 0D;
+        Boolean dataCheck;
+        Scanner scanner = new Scanner(System.in);
+
         for(int i = 0; i < score.length;i++){
             dataCheck = false;
-            if(i<3){
-                while(dataCheck == false){
-                    System.out.println("score of exercise n° "+i+": ");
-                    score[i] = Double.valueOf(scanner.nextLine());
-                    if(socre[i]){
+            while(dataCheck == false){
+                if(i<3){
+                    System.out.print("exercise n°"+(i+1)+" score: ");  
+                }else if(i==3){
+                    System.out.print("test score: ");
+                }else{
+                    System.out.print("participation score: ");
+                }
 
-                    } 
+                scoreValue = Double.valueOf(scanner.nextLine());
+                if(scoreValue <= scoreLimits[i] && scoreValue >= 0){
+                    score[i] = scoreValue;
+                    finalScore = finalScore + scoreValue;
+                    dataCheck = true;
+                } else{
+                    System.out.println("Invalid value, try again.");
                 }
             }
         } 
-        return 0;
+        return finalScore;
     }
 
     //get final result
+    public static boolean getResult(Double finalScore, Double maxScore, String schoolType){
+        double passParameter = 0D;
+        if(schoolType.equalsIgnoreCase("PU") || schoolType.equalsIgnoreCase("public")){
+            passParameter = 0.65;
+        }
+        if(schoolType.equalsIgnoreCase("PR") || schoolType.equalsIgnoreCase("private")){
+            passParameter = 0.7;
+        }
+        if(schoolType.equalsIgnoreCase("MT") || schoolType.equalsIgnoreCase("military")){
+            passParameter = 0.8;
+        }
+
+        if(finalScore >= (maxScore*passParameter)){
+            return true;
+        }else{
+            return false;
+        }
+    }
 }
 
 
@@ -60,7 +99,7 @@ System.out.print("informe o nome do student: ");
             System.out.print("informe a score da atividade "+i+": ");
             score = Double.valueOf(scanner.nextLine());
             if (score <= 10) {
-                scoreFinal = scoreFinal + score;
+                finalScore = finalScore + score;
                 dataCheck = true;
 
             } else {
@@ -74,7 +113,7 @@ System.out.print("informe o nome do student: ");
         System.out.print("informe a score da prova: ");
         score = Double.valueOf(scanner.nextLine());
         if (score <= 50) {
-            scoreFinal = scoreFinal + score;
+            finalScore = finalScore + score;
             dataCheck = true;
 
         } else {
@@ -87,7 +126,7 @@ System.out.print("informe o nome do student: ");
         System.out.print("informe a score da participação: ");
         score = Double.valueOf(scanner.nextLine());
         if (score <= 20) {
-            scoreFinal = scoreFinal + score;
+            finalScore = finalScore + score;
             dataCheck = true;
 
         } else {
@@ -97,24 +136,24 @@ System.out.print("informe o nome do student: ");
 
     switch (schoolType){
         case "PU":
-            if(scoreFinal>= 65){
-                System.out.println("O Aluno "+ student +" foi APROVADO. Total de pontos: "+scoreFinal);
+            if(finalScore>= 65){
+                System.out.println("O Aluno "+ student +" foi APROVADO. Total de pontos: "+finalScore);
             }else{
-                System.out.println("O Aluno "+ student +" foi REPROVADO. Total de pontos: "+scoreFinal);
+                System.out.println("O Aluno "+ student +" foi REPROVADO. Total de pontos: "+finalScore);
             }
             break;
         case "PR":
-            if(scoreFinal>= 70){
-                System.out.println("O Aluno "+ student +" foi APROVADO. Total de pontos: "+scoreFinal);
+            if(finalScore>= 70){
+                System.out.println("O Aluno "+ student +" foi APROVADO. Total de pontos: "+finalScore);
             }else{
-                System.out.println("O Aluno "+ student +" foi REPROVADO. Total de pontos: "+scoreFinal);
+                System.out.println("O Aluno "+ student +" foi REPROVADO. Total de pontos: "+finalScore);
             }
             break;
         case "MT":
-            if(scoreFinal>= 80){
-                System.out.println("O Aluno "+ student +" foi APROVADO. Total de pontos: "+scoreFinal);
+            if(finalScore>= 80){
+                System.out.println("O Aluno "+ student +" foi APROVADO. Total de pontos: "+finalScore);
             }else{
-                System.out.println("O Aluno "+ student +" foi REPROVADO. Total de pontos: "+scoreFinal);
+                System.out.println("O Aluno "+ student +" foi REPROVADO. Total de pontos: "+finalScore);
             }
             break;
     }
